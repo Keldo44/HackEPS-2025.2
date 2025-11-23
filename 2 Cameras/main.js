@@ -1,4 +1,8 @@
-import { PoseLandmarker, FilesetResolver, DrawingUtils } from "https://cdn.skypack.dev/@mediapipe/tasks-vision@0.10.0";
+import { 
+  PoseLandmarker, 
+  FilesetResolver, 
+  DrawingUtils } 
+from "https://cdn.skypack.dev/@mediapipe/tasks-vision@0.10.0";
 
 // HTML elements
 const demosSection = document.getElementById("demos");
@@ -113,15 +117,14 @@ function predictStereo() {
 
   lastTime1 = processFrame(video1, ctx1, drawingUtils1, pointDisplay1, lastTime1);
   lastTime2 = processFrame(video2, ctx2, drawingUtils2, pointDisplay2, lastTime2);
-  var X, Y, Z;
+  var X,Y,Z;
   // Compute stereo 3D only if both points are available
   if (pointDisplay1.dataset.x && pointDisplay2.dataset.x) {
     const x1 = parseFloat(pointDisplay1.dataset.x);
     const y1 = parseFloat(pointDisplay1.dataset.y);
     const x2 = parseFloat(pointDisplay2.dataset.x);
-     
-    const pt3D = compute3D(x1, x2, y1);
 
+    const pt3D = compute3D(x1, x2, y1);
     X = pt3D.X.toFixed(3);
     Y = pt3D.Y.toFixed(3);
     Z = pt3D.Z.toFixed(3);

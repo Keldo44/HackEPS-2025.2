@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="main.js" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.min.js" type="module"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="multiCamView" style="display:flex; gap:20px;">
+        <div style="position:relative;">
+            <video id="webcam1" autoplay playsinline width="480" height="360"></video>
+            <canvas id="canvas1" width="480" height="360" style="position:absolute; left:0; top:0;"></canvas>
+            <div id="point24Display1"
+                style="position:absolute; top:5px; left:5px; background:rgba(0,0,0,0.5); color:white;">N/A</div>
+        </div>
+        <div style="position:relative;">
+            <video id="webcam2" autoplay playsinline width="480" height="360"></video>
+            <canvas id="canvas2" width="480" height="360" style="position:absolute; left:0; top:0;"></canvas>
+            <div id="point24Display2"
+                style="position:absolute; top:5px; left:5px; background:rgba(0,0,0,0.5); color:white;">N/A</div>
+        </div>
+    </div>
+
+    <p id="stereoXYZ">Stereo XYZ: N/A</p>
+    <button id="webcamButton">ENABLE WEBCAM</button>
+
+    <div class="coords">
+        <p class="coord">X: <span id="x">11</span></p>
+        <p class="coord">Z: <span id="z">14</span></p>
+        <p class="coord">Y: <span id="y">16</span></p>
+    </div>
+    
+</body>
+
+</html>

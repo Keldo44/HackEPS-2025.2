@@ -1,52 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pose Detection using MediaPipe PoseLandmarker</title>
-    <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
-    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
-    <link rel="stylesheet" href="styles.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
 </head>
-
 <body>
-    <h1>Pose detection using the MediaPipe PoseLandmarker task</h1>
+    <div id="multiCamView" style="display:flex; gap:20px;">
+    <div style="position:relative;">
+        <video id="webcam1" autoplay playsinline width="480" height="360"></video>
+        <canvas id="canvas1" width="480" height="360" style="position:absolute; left:0; top:0;"></canvas>
+        <div id="point24Display1" style="position:absolute; top:5px; left:5px; background:rgba(0,0,0,0.5); color:white;">N/A</div>
+    </div>
+    <div style="position:relative;">
+        <video id="webcam2" autoplay playsinline width="480" height="360"></video>
+        <canvas id="canvas2" width="480" height="360" style="position:absolute; left:0; top:0;"></canvas>
+        <div id="point24Display2" style="position:absolute; top:5px; left:5px; background:rgba(0,0,0,0.5); color:white;">N/A</div>
+    </div>
+    </div>
 
-    <section id="demos" class="invisible">
-
-        <div id="liveView" class="videoView">
-            <button id="webcamButton" class="mdc-button mdc-button--raised">
-                <span class="mdc-button__ripple"></span>
-                <span class="mdc-button__label">ENABLE WEBCAM</span>
-            </button>
-
-            <div style="position: relative;">
-                <div style="display: flex; gap: 40px; align-items: flex-start;"> <!-- aumenté gap de 20px a 40px -->
-
-                    <div style="position: relative;">
-                        <video id="webcam" width="480" height="360" autoplay playsinline muted></video>
-                        <canvas id="output_canvas" width="480" height="360"></canvas>
-                        <div id="point24Display"></div>
-                    </div>
-
-                    <div style="position: relative; margin-left: 20px;"> <!-- margen extra para separarla -->
-                        <video id="webcam2" width="480" height="360" autoplay playsinline muted></video>
-                        <canvas id="canvas2" width="480" height="360"></canvas>
-                        <div id="point24Display2"></div>
-                    </div>
-
-                </div>
-
-                <div id="point24Display"
-                    style="position: absolute; top: 10px; left: 500px; background: rgba(0,0,0,0.5); color: white; padding: 5px; font-family: monospace;">
-                    Point 24: N/A
-                </div>
-            </div>
-        </div>
-
-    </section>
-    <script src="main.js" type="module"></script>
+    <p id="stereoXYZ">Stereo XYZ: N/A</p>
+    <button id="webcamButton">ENABLE WEBCAM</button>
+    <script src="main.js"></script>
 </body>
-
 </html>
