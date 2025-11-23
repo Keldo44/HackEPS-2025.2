@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Detección con dos cámaras</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.14.0" type="module"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection" type="module"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.min.js" type="module"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="coords">
+        <p class="coord">X: <span id="x">11</span></p>
+        <p class="coord">Z: <span id="z">14</span></p>
+        <p class="coord">Y: <span id="y">16</span></p>
+    </div>
+    <!-- Three.js library -->
+    
+  <h2>Cámara 1</h2>
+  <video id="cam1" width="400" autoplay muted playsinline></video>
+  <canvas id="canvas1" width="400" aspect-ratio="16/9" height="auto"></canvas>
+
+  <h2>Cámara 2</h2>
+  <video id="cam2" width="400" autoplay muted playsinline></video>
+  <canvas id="canvas2" width="400" aspect-ratio="16/9"></canvas>
+
+  <script src="app.js" type="module"></script>
+</body>
+</html>
