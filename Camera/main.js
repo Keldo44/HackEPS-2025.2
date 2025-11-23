@@ -86,17 +86,23 @@ async function handleClick(event) {
 /********************************************************************
 // Demo 2: Webcam continuous detection
 ********************************************************************/
-const video = document.getElementById("webcam");
-const canvasElement = document.getElementById("output_canvas");
-const canvasCtx = canvasElement.getContext("2d");
-const drawingUtils = new DrawingUtils(canvasCtx);
-const point24Display = document.getElementById("point24Display");
+const video1 = document.getElementById("webcam");
+const canvas1 = document.getElementById("output_canvas");
+const ctx1 = canvas1.getContext("2d");
+const point24Display1 = document.getElementById("point24Display");
 
+const video2 = document.getElementById("webcam2");
+const canvas2 = document.getElementById("canvas2");
+const ctx2 = canvas2.getContext("2d");
+const point24Display2 = document.getElementById("point24Display2");
+
+let lastVideoTime1 = -1;
+let lastVideoTime2 = -1;
 
 const hasGetUserMedia = () => !!navigator.mediaDevices?.getUserMedia;
 
 if (hasGetUserMedia()) {
-  enableWebcamButton = document.getElementById("webcamButton");
+  const enableWebcamButton = document.getElementById("webcamButton");
   enableWebcamButton.addEventListener("click", enableCam);
 } else {
   console.warn("getUserMedia() is not supported by your browser");
@@ -109,57 +115,95 @@ function enableCam() {
   }
 
   webcamRunning = !webcamRunning;
-  enableWebcamButton.innerText = webcamRunning
+  document.getElementById("webcamButton").innerText = webcamRunning
     ? "DISABLE PREDICTIONS"
     : "ENABLE PREDICTIONS";
 
   if (!webcamRunning) return;
 
-  navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
-    video.srcObject = stream;
-    video.addEventListener("loadeddata", predictWebcam);
+  // Obtener las cámaras disponibles
+  navigator.mediaDevices.enumerateDevices().then((devices) => {
+    const videoDevices = devices.filter((d) => d.kind === "videoinput");
+
+    if (videoDevices[0]) {
+      navigator.mediaDevices.getUserMedia({ video: { deviceId: videoDevices[0].deviceId } })
+        .then((stream) => {
+          video1.srcObject = stream;
+          video1.addEventListener("loadeddata", predictWebcam1);
+        });
+    }
+
+    if (videoDevices[1]) {
+      navigator.mediaDevices.getUserMedia({ video: { deviceId: videoDevices[1].deviceId } })
+        .then((stream) => {
+          video2.srcObject = stream;
+          video2.addEventListener("loadeddata", predictWebcam2);
+        });
+    }
   });
 }
 
-let lastVideoTime = -1;
-
-async function predictWebcam() {
-  canvasElement.style.height = videoHeight;
-  canvasElement.style.width = videoWidth;
-  video.style.height = videoHeight;
-  video.style.width = videoWidth;
-
+// Función de predicción para la primera cámara
+async function predictWebcam1() {
   if (runningMode === "IMAGE") {
     runningMode = "VIDEO";
     await poseLandmarker.setOptions({ runningMode: "VIDEO" });
   }
 
   const startTimeMs = performance.now();
+  if (lastVideoTime1 !== video1.currentTime) {
+    lastVideoTime1 = video1.currentTime;
 
-  if (lastVideoTime !== video.currentTime) {
-    lastVideoTime = video.currentTime;
-
-    poseLandmarker.detectForVideo(video, startTimeMs, (result) => {
-      canvasCtx.save();
-      canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+    poseLandmarker.detectForVideo(video1, startTimeMs, (result) => {
+      ctx1.clearRect(0, 0, canvas1.width, canvas1.height);
 
       for (const pose of result.landmarks) {
         const point24 = pose[24];
         if (point24) {
-          drawingUtils.drawLandmarks([point24], { radius: 5 });
-          // Update the display div
-          point24Display.innerText = `Point 24: x=${point24.x.toFixed(3)}, y=${point24.y.toFixed(3)}, z=${point24.z.toFixed(3)}`;
+          ctx1.beginPath();
+          ctx1.arc(point24.x * canvas1.width, point24.y * canvas1.height, 5, 0, 2 * Math.PI);
+          ctx1.fillStyle = "red";
+          ctx1.fill();
+          point24Display1.innerText = `Point 24: x=${point24.x.toFixed(3)}, y=${point24.y.toFixed(3)}, z=${point24.z.toFixed(3)}`;
         } else {
-          point24Display.innerText = "Point 24: N/A";
+          point24Display1.innerText = "Point 24: N/A";
         }
       }
-
-      canvasCtx.restore();
     });
-
   }
 
-  if (webcamRunning) {
-    window.requestAnimationFrame(predictWebcam);
-  }
+  if (webcamRunning) requestAnimationFrame(predictWebcam1);
 }
+
+// Función de predicción para la segunda cámara
+async function predictWebcam2() {
+  if (runningMode === "IMAGE") {
+    runningMode = "VIDEO";
+    await poseLandmarker.setOptions({ runningMode: "VIDEO" });
+  }
+
+  const startTimeMs = performance.now();
+  if (lastVideoTime2 !== video2.currentTime) {
+    lastVideoTime2 = video2.currentTime;
+
+    poseLandmarker.detectForVideo(video2, startTimeMs, (result) => {
+      ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
+
+      for (const pose of result.landmarks) {
+        const point24 = pose[24];
+        if (point24) {
+          ctx2.beginPath();
+          ctx2.arc(point24.x * canvas2.width, point24.y * canvas2.height, 5, 0, 2 * Math.PI);
+          ctx2.fillStyle = "blue";
+          ctx2.fill();
+          point24Display2.innerText = `Point 24: x=${point24.x.toFixed(3)}, y=${point24.y.toFixed(3)}, z=${point24.z.toFixed(3)}`;
+        } else {
+          point24Display2.innerText = "Point 24: N/A";
+        }
+      }
+    });
+  }
+
+  if (webcamRunning) requestAnimationFrame(predictWebcam2);
+}
+
