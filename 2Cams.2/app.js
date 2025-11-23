@@ -18,8 +18,8 @@ async function init() {
     // Obtener las referencias a los videos y canvases
     const streams = [
         await navigator.mediaDevices.getUserMedia({ video: { deviceId: cameras[0].deviceId } }),
-        //await navigator.mediaDevices.getUserMedia({ video: { deviceId: cameras[1].deviceId } })
-        await navigator.mediaDevices.getUserMedia({ video: { deviceId: cameras.length > 1 ? cameras[1].deviceId : cameras[0].deviceId } })
+        await navigator.mediaDevices.getUserMedia({ video: { deviceId: cameras[1].deviceId } })
+        //await navigator.mediaDevices.getUserMedia({ video: { deviceId: cameras.length > 1 ? cameras[1].deviceId : cameras[0].deviceId } })
     ];
 
     const videos = [document.getElementById("cam1"), document.getElementById("cam2")];
