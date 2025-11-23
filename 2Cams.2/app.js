@@ -95,10 +95,22 @@ async function init() {
 
                         // **Triangulación 3D**
                         const nose3D = triangulate3D(centerX, centerY, height, coords[0], coords[1]);
-                        cubeX = nose3D.x;
-                        cubeZ = nose3D.z;
+                        while (cubeX - nose3D.x*10 > 0.1 || cubeX - nose3D.x*10 < -0.1) {
+                            if (cubeX < nose3D.x*10) {
+                                cubeX += 0.1;
+                            } else if (cubeX > nose3D.x*10) {
+                                cubeX -= 0.1;
+                            }
+                        }
+                        while (cubeZ - nose3D.z*10 > 0.1 || cubeZ - nose3D.z*10 < -0.1) {
+                            if (cubeZ < nose3D.z*10) {
+                                cubeZ += 0.1;
+                            } else if (cubeZ > nose3D.z*10) {
+                                cubeZ -= 0.1;
+                            }
+                        }
 
-                        
+
                         // Dibujar la posición 3D (en la cámara 1)
                         ctx[0].fillStyle = "green";
                         ctx[0].beginPath();
