@@ -1,0 +1,75 @@
+/* Style the demo section */
+#demos {
+  text-align: center;
+  margin-top: 20px;
+}
+
+#multiCamView {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+/* Webcam feed container */
+#multiCamView div {
+  position: relative;
+}
+
+video {
+  border: 2px solid #ddd;
+  border-radius: 5px;
+}
+
+/* Canvas overlay for drawing landmarks */
+canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: 5px;
+  pointer-events: none;
+}
+
+/* Styling for 3D coordinates and point display */
+#point24Display1, #point24Display2 {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  font-family: monospace;
+  font-size: 14px;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+/* Style for the button to toggle webcam */
+#webcamButton {
+  background-color: #6200ea;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background-color 0.3s;
+}
+
+#webcamButton:hover {
+  background-color: #3700b3;
+}
+
+/* Styling for the 3D coordinates output */
+#stereoXYZ {
+  font-family: monospace;
+  font-size: 16px;
+  color: #333;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 10px;
+  margin-top: 20px;
+  border-radius: 5px;
+  width: 100%;
+  max-width: 600px;
+  margin: 20px auto;
+}
