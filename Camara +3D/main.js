@@ -1,8 +1,9 @@
-import { 
-  PoseLandmarker, 
-  FilesetResolver, 
-  DrawingUtils } 
-from "https://cdn.skypack.dev/@mediapipe/tasks-vision@0.10.0";
+import {
+  PoseLandmarker,
+  FilesetResolver,
+  DrawingUtils
+}
+  from "https://cdn.skypack.dev/@mediapipe/tasks-vision@0.10.0";
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js";
 
 // HTML elements
@@ -59,14 +60,14 @@ async function enableCams() {
   if (!poseLandmarker) return;
 
   webcamRunning = !webcamRunning;
-  if(webcamRunning){
+  if (webcamRunning) {
     enableWebcamButton.innerText = "DISABLE PREDICTIONS";
     enableWebcamButton.style.backgroundColor = "#7C0000";
   } else {
     enableWebcamButton.innerText = "ENABLE PREDICTIONS";
     enableWebcamButton.style.backgroundColor = "rgb(9, 180, 9)"
   }
-  
+
   if (!webcamRunning) return;
 
   // Enumerate video devices
@@ -88,7 +89,7 @@ async function enableCams() {
 }
 
 enableWebcamButton.addEventListener('mouseenter', () => {
-  if(webcamRunning){
+  if (webcamRunning) {
     enableWebcamButton.style.backgroundColor = "#9C0000"; // más claro al pasar
   } else {
     enableWebcamButton.style.backgroundColor = "rgb(0, 220, 0)";
@@ -96,7 +97,7 @@ enableWebcamButton.addEventListener('mouseenter', () => {
 });
 
 enableWebcamButton.addEventListener('mouseleave', () => {
-  if(webcamRunning){
+  if (webcamRunning) {
     enableWebcamButton.style.backgroundColor = "#7C0000"; // color original del estado
   } else {
     enableWebcamButton.style.backgroundColor = "rgb(9, 180, 9)";
@@ -133,14 +134,14 @@ function processFrame(videoEl, ctx, drawingUtils, pointDisplay, lastTime) {
 
   return videoEl.currentTime;
 }
-var X = 0,Y = 0,Z = 0, max_X = -1000, max_Z = -1000, min_X = 2000, min_Z = 2000;
+var X = 0, Y = 0, Z = 0, max_X = -1000, max_Z = -1000, min_X = 2000, min_Z = 2000;
 // Main stereo loop
 function predictStereo() {
   if (!webcamRunning) return;
 
   lastTime1 = processFrame(video1, ctx1, drawingUtils1, pointDisplay1, lastTime1);
   lastTime2 = processFrame(video2, ctx2, drawingUtils2, pointDisplay2, lastTime2);
-  
+
   // Compute stereo 3D only if both points are available
   if (pointDisplay1.dataset.x && pointDisplay2.dataset.x) {
     const x1 = parseFloat(pointDisplay1.dataset.x);
@@ -151,22 +152,22 @@ function predictStereo() {
     X = pt3D.X.toFixed(2);
     Y = pt3D.Y.toFixed(2);
     Z = pt3D.Z.toFixed(2);
-    if(Z < min_Z){
+    if (Z < min_Z) {
       min_Z = Z;
     }
-    if(X < min_X){
+    if (X < min_X) {
       min_X = X;
     }
-    if(Z > max_Z){
+    if (Z > max_Z) {
       max_Z = Z;
     }
-    if(X > max_X){
+    if (X > max_X) {
       max_X = X;
     }
     stereoDisplay.innerText = `Stereo XYZ: X=${X}m, Y=${Y}m, Z=${Z}m`;
     console.log(`Stereo XYZ: X=${X}m, Y=${Y}m, Z=${Z}m`);
     console.log(`Maxims i minims XZ: max_X=${max_X}m, max_Z=${max_Z}m, min_X=${min_X}m, min_Z=${min_Z}m`);
-    
+
   }
 
   requestAnimationFrame(predictStereo);
@@ -209,7 +210,7 @@ document.body.appendChild(renderer.domElement);               // Add canvas to H
 /**************************
  * 4️⃣ Create a plane (ground)
  **************************/
-const planeGeometry = new THREE.BoxGeometry(1,1,1);        // Width, height
+const planeGeometry = new THREE.BoxGeometry(1, 1, 1);        // Width, height
 const planeMaterial = new THREE.MeshPhongMaterial({ color: 0x999999 }); // Material with light shading
 const plane = new THREE.Mesh(planeGeometry, planeMaterial);   // Create the mesh
 plane.rotation.x = -Math.PI / 2;                              // Rotate to lie flat
@@ -315,13 +316,13 @@ function motionFilter(inputX, inputZ) {
   // --- 2️⃣ APPLY INERTIA -------------------------------------------------
 
   // blend current velocity with new noisy input
-  smoothState.velX = 
-      smoothState.velX * smoothness +
-      inputX * responsiveness;
+  smoothState.velX =
+    smoothState.velX * smoothness +
+    inputX * responsiveness;
 
-  smoothState.velZ = 
-      smoothState.velZ * smoothness +
-      inputZ * responsiveness;
+  smoothState.velZ =
+    smoothState.velZ * smoothness +
+    inputZ * responsiveness;
 
   // --- 3️⃣ DETECT SPIKE --------------------------------------------------
 
@@ -336,7 +337,7 @@ function motionFilter(inputX, inputZ) {
     // clamp to spike max speed
     smoothState.velX = THREE.MathUtils.clamp(smoothState.velX, -spikeSpeed, spikeSpeed);
     smoothState.velZ = THREE.MathUtils.clamp(smoothState.velZ, -spikeSpeed, spikeSpeed);
-  } 
+  }
   else {
     // NORMAL movement clamp
     smoothState.velX = THREE.MathUtils.clamp(smoothState.velX, -maxSpeed, maxSpeed);
@@ -360,44 +361,50 @@ const bounds = {
   zMax: 3.5
 };
 function adjustValues(x1, x2, k = 0.1) {
-    // Calculate the absolute difference
-    const diff = Math.abs(x1 - x2);
-    
-    // Calculate the exponential adjustment factor
-    const adjustment = 3 * (1 - Math.exp(-k * diff));
+  // Calculate the absolute difference
+  const diff = Math.abs(x1 - x2);
 
-    if (x1 > x2) {
-        // If x1 is greater than x2, increase x2
-        x2 += adjustment;
-    } else if (x1 < x2) {
-        // If x2 is greater than x1, decrease x2
-        x2 -= adjustment;
-    }
+  // Calculate the exponential adjustment factor
+  const adjustment = 3 * (1 - Math.exp(-k * diff));
 
-    return { x1, x2 };
+  if (x1 > x2) {
+    // If x1 is greater than x2, increase x2
+    x2 += adjustment;
+  } else if (x1 < x2) {
+    // If x2 is greater than x1, decrease x2
+    x2 -= adjustment;
+  }
+
+  return x2;
 }
 function animate() {
-    requestAnimationFrame(animate);
+  requestAnimationFrame(animate);
 
-    // 🔧 Filter + smooth + control
-    const move = motionFilter(X, Z);
+  // 🔧 Filter + smooth + control
+  const move = motionFilter(X, Z);
+  X = X * 3;
+  let numX = parseFloat(X);
+  let numZ = parseFloat(Z);
 
-    cubeX = adjustValues(cubeX, X*30);
-    cubeZ = adjustValues(cubeZ, Z*10);
+  if (Math.abs(cubeX - numX) < 3) {
+    cubeX = numX;
+  }
+  if (Math.abs(cubeZ - numZ) < 3) {
+    cubeZ = numZ;
+  }
 
+  document.getElementById("x").innerText = cubeX.toFixed(2);
+  document.getElementById("z").innerText = cubeZ.toFixed(2);
+  document.getElementById("y").innerText = cube.position.y.toFixed(2);
 
-    document.getElementById("x").innerText = cubeX.toFixed(2);
-    document.getElementById("z").innerText = cubeZ.toFixed(2);
-    document.getElementById("y").innerText = cube.position.y.toFixed(2);
+  // clamp inside your bounds
+  cubeX = THREE.MathUtils.clamp(cubeX, bounds.xMin, bounds.xMax);
+  cubeZ = THREE.MathUtils.clamp(cubeZ, bounds.zMin, bounds.zMax);
 
-    // clamp inside your bounds
-    cubeX = THREE.MathUtils.clamp(cubeX, bounds.xMin, bounds.xMax);
-    cubeZ = THREE.MathUtils.clamp(cubeZ, bounds.zMin, bounds.zMax);
+  cube.position.x = cubeX;
+  cube.position.z = cubeZ;
 
-    cube.position.x = cubeX;
-    cube.position.z = cubeZ;
-
-    renderer.render(scene, camera);
+  renderer.render(scene, camera);
 }
 
 animate();
