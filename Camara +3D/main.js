@@ -287,7 +287,6 @@ function wanderRandom() {
     wanderState.driftX += (Math.random() * 2 - 1) * spikeStrength;
     wanderState.driftZ += (Math.random() * 2 - 1) * spikeStrength;
 
-    console.log("💥💥 MEGA SPIKE 💥💥");
   }
 
   // --- 4️⃣ Combine everything --------------------------------------------
@@ -360,19 +359,32 @@ const bounds = {
   zMin: -1.5,
   zMax: 3.5
 };
+function adjustValues(x1, x2, k = 0.1) {
+    // Calculate the absolute difference
+    const diff = Math.abs(x1 - x2);
+    
+    // Calculate the exponential adjustment factor
+    const adjustment = 3 * (1 - Math.exp(-k * diff));
 
+    if (x1 > x2) {
+        // If x1 is greater than x2, increase x2
+        x2 += adjustment;
+    } else if (x1 < x2) {
+        // If x2 is greater than x1, decrease x2
+        x2 -= adjustment;
+    }
+
+    return { x1, x2 };
+}
 function animate() {
     requestAnimationFrame(animate);
 
     // 🔧 Filter + smooth + control
     const move = motionFilter(X, Z);
 
-    cubeX = X * 100;
-    cubeZ = Z * 10;
-    console.log("cubex="  + cubeX);
-    console.log("cubeZ= " + cubeZ);
-    
-    
+    cubeX = adjustValues(cubeX, X*30);
+    cubeZ = adjustValues(cubeZ, Z*10);
+
 
     document.getElementById("x").innerText = cubeX.toFixed(2);
     document.getElementById("z").innerText = cubeZ.toFixed(2);
